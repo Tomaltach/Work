@@ -92,5 +92,11 @@
   </Settings>
   <VirtualDirectory Name="src">
     <File Name="main.c"/>
+    <File Name="SerialPinInfo.c"/>
+    <File Name="SerialPinInfo.h"/>
+    <File Name="OpenSerialPort.c"/>
+    <File Name="OpenSerialPort.h"/>
+    <File Name="Test.c"/>
+    <File Name="Test.h"/>
   </VirtualDirectory>
 </CodeLite_Project>
