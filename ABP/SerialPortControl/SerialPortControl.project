@@ -98,5 +98,7 @@
     <File Name="OpenSerialPort.h"/>
     <File Name="Test.c"/>
     <File Name="Test.h"/>
+    <File Name="Menus.c"/>
+    <File Name="Menus.h"/>
   </VirtualDirectory>
 </CodeLite_Project>

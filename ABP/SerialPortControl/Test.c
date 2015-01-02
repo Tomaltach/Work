@@ -18,8 +18,8 @@ int test() {
     // Open the highest available serial port number
     fprintf(stderr, "Opening serial port...");
     hSerial = CreateFile(
-                "\\\\.\\COM2", GENERIC_READ|GENERIC_WRITE, 0, NULL,
-                OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
+                "\\\\.\\COM0", GENERIC_READ|GENERIC_WRITE, 0, 0,
+                OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
     if (hSerial == INVALID_HANDLE_VALUE) {
             fprintf(stderr, "Error\n");
             return 1;

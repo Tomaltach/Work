@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=tdonegan
-Date                   :=12/31/14
+Date                   :=01/02/15
 CodeLitePath           :="C:\Program Files (x86)\CodeLite"
 LinkerName             :=C:/MinGW-4.8.1/bin/g++.exe 
 SharedObjectLinkerName :=C:/MinGW-4.8.1/bin/g++.exe -shared -fPIC
@@ -63,7 +63,7 @@ AS       := C:/MinGW-4.8.1/bin/as.exe
 ##
 CodeLiteDir:=C:\Program Files (x86)\CodeLite
 UNIT_TEST_PP_SRC_DIR:=C:\UnitTest++-1.3
-Objects0=$(IntermediateDirectory)/main.c$(ObjectSuffix) $(IntermediateDirectory)/SerialPinInfo.c$(ObjectSuffix) $(IntermediateDirectory)/OpenSerialPort.c$(ObjectSuffix) $(IntermediateDirectory)/Test.c$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/main.c$(ObjectSuffix) $(IntermediateDirectory)/SerialPinInfo.c$(ObjectSuffix) $(IntermediateDirectory)/OpenSerialPort.c$(ObjectSuffix) $(IntermediateDirectory)/Test.c$(ObjectSuffix) $(IntermediateDirectory)/Menus.c$(ObjectSuffix) 
 
 
 
@@ -121,6 +121,14 @@ $(IntermediateDirectory)/Test.c$(DependSuffix): Test.c
 
 $(IntermediateDirectory)/Test.c$(PreprocessSuffix): Test.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Test.c$(PreprocessSuffix) "Test.c"
+
+$(IntermediateDirectory)/Menus.c$(ObjectSuffix): Menus.c $(IntermediateDirectory)/Menus.c$(DependSuffix)
+	$(CC) $(SourceSwitch) "C:/Users/tdonegan/git/Work/ABP/SerialPortControl/Menus.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Menus.c$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/Menus.c$(DependSuffix): Menus.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Menus.c$(ObjectSuffix) -MF$(IntermediateDirectory)/Menus.c$(DependSuffix) -MM "Menus.c"
+
+$(IntermediateDirectory)/Menus.c$(PreprocessSuffix): Menus.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Menus.c$(PreprocessSuffix) "Menus.c"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

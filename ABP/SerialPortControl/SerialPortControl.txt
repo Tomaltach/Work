@@ -1,1 +1,1 @@
-./Debug/main.c.o ./Debug/SerialPinInfo.c.o ./Debug/OpenSerialPort.c.o ./Debug/Test.c.o   
+./Debug/main.c.o ./Debug/SerialPinInfo.c.o ./Debug/OpenSerialPort.c.o ./Debug/Test.c.o ./Debug/Menus.c.o   
