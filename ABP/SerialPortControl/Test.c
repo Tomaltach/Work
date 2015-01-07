@@ -1,5 +1,5 @@
-#include <windows.h>
 #include <stdio.h>		// Standard input/output definitions
+#include <windows.h>
  
 int test() {
     // Define the five bytes to send ("hello")

@@ -1,0 +1,2 @@
+void openPort();
+void closePort();

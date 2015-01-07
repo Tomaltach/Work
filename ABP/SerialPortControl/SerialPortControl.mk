@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=tdonegan
-Date                   :=01/02/15
+Date                   :=01/07/15
 CodeLitePath           :="C:\Program Files (x86)\CodeLite"
 LinkerName             :=C:/MinGW-4.8.1/bin/g++.exe 
 SharedObjectLinkerName :=C:/MinGW-4.8.1/bin/g++.exe -shared -fPIC
@@ -63,7 +63,7 @@ AS       := C:/MinGW-4.8.1/bin/as.exe
 ##
 CodeLiteDir:=C:\Program Files (x86)\CodeLite
 UNIT_TEST_PP_SRC_DIR:=C:\UnitTest++-1.3
-Objects0=$(IntermediateDirectory)/main.c$(ObjectSuffix) $(IntermediateDirectory)/SerialPinInfo.c$(ObjectSuffix) $(IntermediateDirectory)/OpenSerialPort.c$(ObjectSuffix) $(IntermediateDirectory)/Test.c$(ObjectSuffix) $(IntermediateDirectory)/Menus.c$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/main.c$(ObjectSuffix) $(IntermediateDirectory)/SerialPinInfo.c$(ObjectSuffix) $(IntermediateDirectory)/Test.c$(ObjectSuffix) $(IntermediateDirectory)/SerialPort.c$(ObjectSuffix) 
 
 
 
@@ -106,14 +106,6 @@ $(IntermediateDirectory)/SerialPinInfo.c$(DependSuffix): SerialPinInfo.c
 $(IntermediateDirectory)/SerialPinInfo.c$(PreprocessSuffix): SerialPinInfo.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/SerialPinInfo.c$(PreprocessSuffix) "SerialPinInfo.c"
 
-$(IntermediateDirectory)/OpenSerialPort.c$(ObjectSuffix): OpenSerialPort.c $(IntermediateDirectory)/OpenSerialPort.c$(DependSuffix)
-	$(CC) $(SourceSwitch) "C:/Users/tdonegan/git/Work/ABP/SerialPortControl/OpenSerialPort.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/OpenSerialPort.c$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/OpenSerialPort.c$(DependSuffix): OpenSerialPort.c
-	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/OpenSerialPort.c$(ObjectSuffix) -MF$(IntermediateDirectory)/OpenSerialPort.c$(DependSuffix) -MM "OpenSerialPort.c"
-
-$(IntermediateDirectory)/OpenSerialPort.c$(PreprocessSuffix): OpenSerialPort.c
-	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/OpenSerialPort.c$(PreprocessSuffix) "OpenSerialPort.c"
-
 $(IntermediateDirectory)/Test.c$(ObjectSuffix): Test.c $(IntermediateDirectory)/Test.c$(DependSuffix)
 	$(CC) $(SourceSwitch) "C:/Users/tdonegan/git/Work/ABP/SerialPortControl/Test.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Test.c$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/Test.c$(DependSuffix): Test.c
@@ -122,13 +114,13 @@ $(IntermediateDirectory)/Test.c$(DependSuffix): Test.c
 $(IntermediateDirectory)/Test.c$(PreprocessSuffix): Test.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Test.c$(PreprocessSuffix) "Test.c"
 
-$(IntermediateDirectory)/Menus.c$(ObjectSuffix): Menus.c $(IntermediateDirectory)/Menus.c$(DependSuffix)
-	$(CC) $(SourceSwitch) "C:/Users/tdonegan/git/Work/ABP/SerialPortControl/Menus.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Menus.c$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/Menus.c$(DependSuffix): Menus.c
-	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Menus.c$(ObjectSuffix) -MF$(IntermediateDirectory)/Menus.c$(DependSuffix) -MM "Menus.c"
+$(IntermediateDirectory)/SerialPort.c$(ObjectSuffix): SerialPort.c $(IntermediateDirectory)/SerialPort.c$(DependSuffix)
+	$(CC) $(SourceSwitch) "C:/Users/tdonegan/git/Work/ABP/SerialPortControl/SerialPort.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/SerialPort.c$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/SerialPort.c$(DependSuffix): SerialPort.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/SerialPort.c$(ObjectSuffix) -MF$(IntermediateDirectory)/SerialPort.c$(DependSuffix) -MM "SerialPort.c"
 
-$(IntermediateDirectory)/Menus.c$(PreprocessSuffix): Menus.c
-	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Menus.c$(PreprocessSuffix) "Menus.c"
+$(IntermediateDirectory)/SerialPort.c$(PreprocessSuffix): SerialPort.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/SerialPort.c$(PreprocessSuffix) "SerialPort.c"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

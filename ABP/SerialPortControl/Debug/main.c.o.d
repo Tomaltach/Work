@@ -1,9 +1,7 @@
-Debug/main.c.o: main.c SerialPinInfo.h OpenSerialPort.h Test.h Menus.h
+Debug/main.c.o: main.c SerialPinInfo.h SerialPort.h Test.h
 
 SerialPinInfo.h:
 
-OpenSerialPort.h:
+SerialPort.h:
 
 Test.h:
-
-Menus.h:
