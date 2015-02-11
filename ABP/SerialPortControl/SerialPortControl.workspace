@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Workspace Name="SerialPortControl" Database="">
   <Project Name="SerialPortControl" Path="SerialPortControl.project" Active="Yes"/>
+  <Project Name="" Path="../../../../../../.project"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Project Name="SerialPortControl" ConfigName="Debug"/>
+      <Project Name="" ConfigName="Debug"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Release" Selected="yes">
       <Project Name="SerialPortControl" ConfigName="Release"/>
+      <Project Name="" ConfigName="Release"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>

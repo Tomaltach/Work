@@ -1,27 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Session Name="C:\Users\tdonegan\git\Work\ABP\SerialPortControl\SerialPortControl.workspace">
-  <int Value="1" Name="m_selectedTab"/>
+  <int Value="0" Name="m_selectedTab"/>
   <wxString Value="C:\Users\tdonegan\git\Work\ABP\SerialPortControl\SerialPortControl.workspace" Name="m_workspaceName"/>
   <TabInfoArray Name="TabInfoArray">
     <TabInfo>
-      <wxString Value="C:\Users\tdonegan\git\Work\ABP\SerialPortControl\main.c" Name="FileName"/>
-      <int Value="0" Name="FirstVisibleLine"/>
+      <wxString Value="C:\Users\tdonegan\Desktop\TEST\main.c" Name="FileName"/>
+      <int Value="28" Name="FirstVisibleLine"/>
       <int Value="16" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
       <IntVector Name="CollapsedFolds"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="C:\Users\tdonegan\git\Work\ABP\SerialPortControl\Test.c" Name="FileName"/>
-      <int Value="9" Name="FirstVisibleLine"/>
-      <int Value="21" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-      <IntVector Name="CollapsedFolds">
-        <IntVectorItem Value="32"/>
-        <IntVectorItem Value="43"/>
-        <IntVectorItem Value="56"/>
-        <IntVectorItem Value="66"/>
-        <IntVectorItem Value="75"/>
-      </IntVector>
     </TabInfo>
   </TabInfoArray>
   <SerializedObject Name="m_breakpoints">
