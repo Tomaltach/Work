@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<bean id="stockService" class="com.tom.abp.service.impl.StockServiceImpl">
+		<constructor-arg ref="stockDao" />
+	</bean>
+	<bean id="stockDao" class="com.tom.abp.dao.impl.StockDaoImpl">
+		<constructor-arg ref="sessionFactory" />
+	</bean>
+
+	<bean id="userService" class="com.tom.abp.service.impl.UserServiceImpl">
+		<constructor-arg ref="userDao" />
+		<constructor-arg ref="authorityDao" />
+	</bean>
+	<bean id="userDao" class="com.tom.abp.dao.impl.UserDaoImpl">
+		<constructor-arg ref="sessionFactory" />
+	</bean>
+
+	<bean id="authorityService" class="com.tom.abp.service.impl.AuthorityServiceImpl">
+		<constructor-arg ref="authorityDao" />
+	</bean>
+	<bean id="authorityDao" class="com.tom.abp.dao.impl.AuthorityDaoImpl">
+		<constructor-arg ref="sessionFactory" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan">
+			<list>
+				<value>com/tom/abp/entity</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+</beans>
