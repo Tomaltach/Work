@@ -2,6 +2,7 @@ package ie.tom.abp.gui.panel;
 
 import ie.tom.abp.entity.BigData;
 import ie.tom.abp.entity.Data;
+import ie.tom.abp.entity.Report;
 import ie.tom.abp.excel.read.ReadExcel;
 
 import java.awt.event.ActionEvent;
@@ -21,21 +22,45 @@ public class DisplayPanel {
 	private List<Integer> rows;
 	private List<Data> data;
 	private Data info;
-	private double high = 0;
-	private double low = 0;
+	private Report report;
+	private double high = 0.0;
+	private double low = 0.0;
 	private int count = 0;
 	private JTextArea output;
+	private JButton submit;
 
 	public JPanel topPanel() {
 		JLabel lblUrl = new JLabel("File location");
 		final JTextField fileUrl = new JTextField(20);
-		JButton submit = new JButton("Submit");
+		submit = new JButton("Submit");
 		
 		submit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ReadExcel read = new ReadExcel(fileUrl.getText());
-				
-				printInfo(read.read());
+				submit.setEnabled(false);
+				output.setText("");
+				final Thread submitThread = new Thread() {
+					public void run() {
+						ReadExcel read = new ReadExcel(fileUrl.getText());
+						printInfo(read.read());
+					}
+				};
+				final Thread counterThread = new Thread() {
+					public void run() {
+						int time = 0;
+						while(submitThread.isAlive()) {
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							time++;
+							output.setText("Time waiting: " + time + "\n");
+						}
+						printReport();
+					}
+				};
+				submitThread.start();
+				counterThread.start();
 			}
 		});
 		
@@ -61,50 +86,37 @@ public class DisplayPanel {
 		rows = bigData.getRows();
 		columns = bigData.getCols();
 		data = bigData.getData();
+		report = new Report();
 		
-		output.setText("");
-		String message = "";
 		double total = 0;
 		ListIterator<Integer> rowloop = rows.listIterator();
 		while(rowloop.hasNext()) {
-			System.out.println("rowloop: " + count);
+			int r_struct = rowloop.next();
 			ListIterator<Integer> colloop = columns.listIterator();
-			count = 0;
+			int cc = 0;
 			while(colloop.hasNext()) {
-				System.out.print("colloop: " + count);
-				output.append("thff lkh");
-				System.out.print(" size: " + columns.size());
-				int i = colloop.next();
-				System.out.println(" int: " + i);
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				int c_struct = colloop.next();
 				ListIterator<Data> dataloop = data.listIterator();
 				while(dataloop.hasNext()) {
-					System.out.println("dataloop: " + count);
 					info = dataloop.next();
 					int row = info.getRow();
 					int col = info.getCol();
-					if(row == rowloop.next() && col == colloop.next()) {
-						try {
-							double val = Double.parseDouble(info.getData());
-							total = addTotal(val, total);
-						} catch(Exception e) {
-							System.out.println("Number!!!");
+					if(cc == 20) {
+						if(row == r_struct && col == c_struct) {
+							try {
+								double val = Double.parseDouble(info.getData());
+								total = addTotal(val, total);
+							} catch(Exception e) {
+								System.out.println("Number!!!");
+							}
 						}
 					}
 				}
-				count++;
-			}
-			double average = total / count;
-
-			message = "Chill 1:\n\tHighest: " + high + "\n\tLowest: " + low + "\n\tAverage: " + average + "\n";
-			
-			output.append(message);
+				cc++;
+			}	
+			addToReport(total);
 		}
+		printReport();
 	}
 	private double addTotal(double val, double total) {
 		if(high < val) {
@@ -116,5 +128,32 @@ public class DisplayPanel {
 		total += val;	
 		
 		return total;
+	}
+	private void addToReport(double total) {
+		report.setHigh(high);
+		report.setLow(low);
+		report.setCount(count++);
+		total += report.getTotal();
+		report.setTotal(total);		
+	}
+	private void printReport() {
+		String message = "";
+		
+		double average = report.getTotal() / report.getCount();
+		System.out.println("total: " + report.getTotal() + " count: " + report.getCount());
+		message = "Chill 1:\t" + report.getCount();
+		message += "\n\tTotal: " + report.getTotal();
+		message += "\n\tHighest: " + report.getHigh();
+		message += "\n\tLowest: " + report.getLow();
+		message += "\n\tAverage: " + average + "\n";
+		
+		output.append(message);
+		
+		high = 0.0;
+		low = 0.0;
+		average = 0.0;
+		count = 1;
+		
+		submit.setEnabled(true);
 	}
 }

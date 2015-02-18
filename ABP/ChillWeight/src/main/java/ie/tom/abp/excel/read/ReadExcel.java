@@ -33,7 +33,7 @@ public class ReadExcel {
 		columns = new ArrayList<Integer>();
 		data = new ArrayList<Data>();
 		try {
-			FileInputStream fileInputStream = new FileInputStream(url + "\\report2.xls");
+			FileInputStream fileInputStream = new FileInputStream(url + "\\report1.xls");
 			HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
 			HSSFSheet worksheet = workbook.getSheet("AIBP Report");
 			
@@ -41,10 +41,10 @@ public class ReadExcel {
 			HSSFCell cell;
 			String val = null;
 			
-			for(int i=3; i<6; i++) { //1162
+			for(int i=2; i<100; i++) { //1162
 				row = worksheet.getRow(i);
 				rows.add(i);
-				for(int j=0; j<2; j++) { //21
+				for(int j=0; j<21; j++) { //21
 					row = worksheet.getRow(i);
 					cell = row.getCell(j);
 					cell.setCellType(Cell.CELL_TYPE_STRING);
@@ -55,8 +55,7 @@ public class ReadExcel {
 					info.setRow(i);
 					info.setCol(j);
 					info.setData(val);
-					
-					System.out.println("row: " + i + " col: " + j + " val: " + val);
+					data.add(info);
 				}
 			}			
 		} catch (FileNotFoundException e) {
