@@ -1,7 +1,7 @@
 Work
 ====
 
-Work related projects.
+Work related projects that I made for my own convenience.
 
 iPhone Signatures:
 HTML code for email signature.
