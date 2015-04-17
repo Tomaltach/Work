@@ -1,5 +1,6 @@
 package ie.tom.abp.excel;
 
+import ie.tom.abp.email.SendEmailReport;
 import ie.tom.abp.entity.Employee;
 
 import java.io.File;
@@ -16,6 +17,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class WriteExcel {
 	private List<Employee> emp;
+	private String userHome = "user.home";
+	private String path = System.getProperty(userHome) + "\\Desktop\\Manning Reports\\";
 
 	public WriteExcel(List<Employee> emp) {
 		this.emp = emp;
@@ -50,11 +53,12 @@ public class WriteExcel {
         
 		try {
 			//Write the workbook in file system
-			String fileName = "Manning - " + new SimpleDateFormat("yyyy-MM-dd HHmm'.txt'").format(new Date());
-			FileOutputStream out = new FileOutputStream(new File("C:\\Users\\tdonegan\\Documents\\" + fileName + ".xlsx"));
+			String fileName = "Manning - " + new SimpleDateFormat("yyyy-MM-dd HHmm").format(new Date()) + ".xlsx";
+			FileOutputStream out = new FileOutputStream(new File(path + fileName));
 			workbook.write(out);
 			out.close();
-			System.out.println("manning.xlsx written successfully on disk.");
+			System.out.println(path + fileName + " written successfully on disk.");
+			new SendEmailReport(path, fileName);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

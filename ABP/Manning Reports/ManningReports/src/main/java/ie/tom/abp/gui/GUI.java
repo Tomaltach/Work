@@ -208,9 +208,7 @@ public class GUI extends JFrame {
                 if(clock.length() == 4 && !jobtype.getSelectedItem().equals("Job Type")) {
                 	System.out.println(clock + "| " + jobtype.getSelectedItem());
                 	textarea.setText(output(clock, ""+jobtype.getSelectedItem()));
-                	
-                	emp.add(new Employee(clock, ""+jobtype.getSelectedItem()));
-                    
+                	                    
                 	clock = "";
                     clockNumber.setText(clock);
                     repaint();
@@ -228,13 +226,13 @@ public class GUI extends JFrame {
 		
 		return keypad;
 	}
-	private String output(String clock1, String jobtype) {
+	private String output(String clock, String jobtype) {
 		emp.add(new Employee(clock, jobtype));
 		String out = "";
 		ListIterator<Employee> li = emp.listIterator(emp.size());		
 		while(li.hasPrevious()) {			
 			Employee e = li.previous();
-			out = e.getClock() + "  | " + e.getJobtype() + "\n" + out;
+			out = out + e.getClock() + "  | " + e.getJobtype() + "\n";
 		}
 		return HEADER + out;
 	}
