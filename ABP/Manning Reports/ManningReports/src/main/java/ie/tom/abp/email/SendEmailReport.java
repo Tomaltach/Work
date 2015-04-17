@@ -19,17 +19,22 @@ import javax.mail.internet.MimeMultipart;
 public class SendEmailReport {
 	private String path;
 	private String fileName;
+	private String ip;
+	private String emails;
 
-	public SendEmailReport(String path, String fileName) {
+	public SendEmailReport(String path, String fileName, String ip, String emails) {
 		this.path = path;
 		this.fileName = fileName;
+		this.ip = ip;
+		this.emails = emails;
 		sendEmail();
 	}
 	private void sendEmail() {
 		try {
-			String smtpServer = "10.6.1.70";
-			//String to = "BanBHSupervisor.Reports@abpireland.com";
-			String to = "Thomas.Donegan@abpireland.com";
+			String smtpServer = ip;
+			System.out.println(emails);
+			String to = emails;
+			//String to = "Thomas.Donegan@abpireland.com";
 			//String from = "BanBHSupervisor.Reports@abpireland.com";
 			String from = "Thomas.Donegan@abpireland.com";
 			String subject = "Manning Report";
@@ -40,7 +45,6 @@ public class SendEmailReport {
 			System.out.println("Usage: java com.lotontech.mail.SimpleSender" +
 					" smtpServer toAddress fromAddress subjectText bodyText");
 	    }
-		System.exit(0);
 	}
 	private void send(String smtpServer, String to, String from, String subject, String body, String attachment) {
 		try {

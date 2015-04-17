@@ -9,15 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReadFile {
-	private static String userHome = "user.home";
-	private static String path = System.getProperty(userHome) + "\\Desktop\\Manning Reports\\";
 	
-	public static List<String> readJobType() {
+	public static List<String> readJobType(String path, String jobtypes) {
 		FileInputStream fis;
 		
 		List<String> s = new ArrayList<String>();
 		try {
-			fis = new FileInputStream(path + "JobTypes.txt");
+			fis = new FileInputStream(path + jobtypes);
 			
 			//Construct BufferedReader from InputStreamReader
 			BufferedReader br = new BufferedReader(new InputStreamReader(fis));

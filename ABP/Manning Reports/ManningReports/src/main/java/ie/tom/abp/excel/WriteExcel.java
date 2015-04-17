@@ -17,11 +17,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class WriteExcel {
 	private List<Employee> emp;
-	private String userHome = "user.home";
-	private String path = System.getProperty(userHome) + "\\Desktop\\Manning Reports\\";
+	private String ip;
+	private String emails;
+	private final static String PATH = "C:\\ITManningSheets\\ManningSheets\\";
 
-	public WriteExcel(List<Employee> emp) {
+	public WriteExcel(List<Employee> emp, String ip, String emails) {
 		this.emp = emp;
+		this.ip = ip;
+		this.emails = emails;
 		init();
 	}
 	private void init() {
@@ -54,11 +57,11 @@ public class WriteExcel {
 		try {
 			//Write the workbook in file system
 			String fileName = "Manning - " + new SimpleDateFormat("yyyy-MM-dd HHmm").format(new Date()) + ".xlsx";
-			FileOutputStream out = new FileOutputStream(new File(path + fileName));
+			FileOutputStream out = new FileOutputStream(new File(PATH + fileName));
 			workbook.write(out);
 			out.close();
-			System.out.println(path + fileName + " written successfully on disk.");
-			new SendEmailReport(path, fileName);
+			System.out.println(PATH + fileName + " written successfully on disk.");
+			new SendEmailReport(PATH, fileName, ip, emails);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
