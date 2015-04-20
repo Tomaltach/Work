@@ -6,10 +6,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class Startup {
 	private final static String PATH = "C:\\ITManningSheets\\";
@@ -20,7 +20,16 @@ public class Startup {
 
 	public Startup() {
 		checkShare();
-		new GUI(ip, jobtype, emails, PATH);
+		new GUI(ip, jobtype, emails, PATH, this);
+	}
+	public void reloadCache() {
+		if(!ip.equals(null)) {
+			if(!share.equals(null)) { 
+				cache(share, PATH);
+			}
+		} else {
+			ip = "10.6.1.70";
+		}
 	}
 	private void checkShare() {
 		try {
@@ -53,40 +62,35 @@ public class Startup {
 			e.printStackTrace();
 		}
 		
-		if(!ip.equals(null)) {
-			if(!share.equals(null)) { 
-				cache(new File(share), new File(PATH));
-			}
-		} else {
-			ip = "10.6.1.70";
-		}
+		reloadCache();
 	}
-	@SuppressWarnings("resource")
-	private boolean cache(File sourceFile, File destFile) {
+	private boolean cache(String sourceFile, String destFile) {
+		File source = new File(sourceFile);
+		File dest = new File(destFile);
+		
 		try {
-			if(!sourceFile.exists()) {
+			if(!source.isDirectory()) {
+				System.out.println("Share cannot be accessed");
 				return false;
 			}
-			if (!destFile.exists()) {
-				destFile.createNewFile();
+			if(!dest.exists()) {
+				dest.mkdir();
 			}
-			FileChannel source = null;
-			FileChannel destination = null;
-			source = new FileInputStream(sourceFile).getChannel();
-			destination = new FileOutputStream(destFile).getChannel();
-			if (destination != null && source != null) {
-				destination.transferFrom(source, 0, source.size());
-			}
-			if (source != null) {
-				source.close();
-			}
-			if (destination != null) {
-				destination.close();
+					
+			File[] files = source.listFiles(); 
+	
+			for(int i=0; i<files.length; i++) {	
+				String x=(source + "\\" + files[i].getName());
+				String y=(dest + "\\" + files[i].getName());
+	
+				File f1 = new File(x);
+				f1.renameTo(new File(y));
+				Files.copy(files[i].toPath(), new File(y).toPath(), StandardCopyOption.REPLACE_EXISTING);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-			return false;
 		}
+		
 		return true;
 	}
 }

@@ -2,6 +2,7 @@ package ie.tom.abp.gui;
 
 import ie.tom.abp.entity.Employee;
 import ie.tom.abp.excel.WriteExcel;
+import ie.tom.abp.startup.Startup;
 import ie.tom.abp.textfile.ReadFile;
 
 import java.awt.BorderLayout;
@@ -29,6 +30,7 @@ import net.java.dev.designgridlayout.DesignGridLayout;
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
 	private static final String HEADER = "Clock | Job Type\n------+------------\n";
+	private Startup startup;
 	private String clock = "";
 	private List<String> position = new ArrayList<String>();
 	private List<Employee> emp = new ArrayList<Employee>();
@@ -40,7 +42,7 @@ public class GUI extends JFrame {
 	private String emails;
 	private String path;
 	
-	public GUI(String ip, String jobtypes, String emails, String path) {
+	public GUI(String ip, String jobtypes, String emails, String path, Startup startup) {
 		super("Manning Report");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
@@ -49,6 +51,7 @@ public class GUI extends JFrame {
 		this.jobtypes = jobtypes;
 		this.emails = emails;
 		this.path = path;
+		this.startup = startup;
 		
 		Toolkit toolkit =  Toolkit.getDefaultToolkit ();
 		Dimension dim = toolkit.getScreenSize();
@@ -104,7 +107,7 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				Thread t1 = new Thread(new Runnable() {
 				     public void run() {
-						new WriteExcel(emp, ip, emails);				
+						new WriteExcel(emp, ip, ReadFile.readEmail(path, emails));				
 						textarea.setText(HEADER);
 						emp.clear();
 				     }
@@ -241,7 +244,13 @@ public class GUI extends JFrame {
 		save.setFont(save.getFont().deriveFont(MEDIUM_TEXT));
 		save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(clock.length() == 4 && !jobtype.getSelectedItem().equals("Job Type")) {
+                if(clock.length() == 4 && !jobtype.getSelectedItem().equals("Job Type")
+                		&& !jobtype.getSelectedItem().equals("--- FQ ---")
+                		&& !jobtype.getSelectedItem().equals("--- HQ ---")
+                		&& !jobtype.getSelectedItem().equals("--- PAD ---")
+                		&& !jobtype.getSelectedItem().equals("--- Packing ---")
+                		&& !jobtype.getSelectedItem().equals("--- Abbatoir")
+                		&& !jobtype.getSelectedItem().equals("")) {
                 	System.out.println(clock + "| " + jobtype.getSelectedItem());
                 	textarea.setText(output(clock, ""+jobtype.getSelectedItem()));
                 	                    
@@ -273,6 +282,7 @@ public class GUI extends JFrame {
 		return HEADER + out;
 	}
  	private void reload() {
+ 		startup.reloadCache();
 		position = ReadFile.readJobType(path, jobtypes);
 	}
 }

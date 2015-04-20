@@ -33,10 +33,9 @@ public class SendEmailReport {
 		try {
 			String smtpServer = ip;
 			System.out.println(emails);
-			String to = emails;
-			//String to = "Thomas.Donegan@abpireland.com";
-			//String from = "BanBHSupervisor.Reports@abpireland.com";
-			String from = "Thomas.Donegan@abpireland.com";
+			//String to = emails;
+			String to = "BanBHSupervisor.Reports@abpireland.com,Barry.Owens@abpireland.com,Thomas.Donegan@abpireland.com,Charles.Jute@abpireland.com";
+			String from = "BanBHSupervisor.Reports@abpireland.com";
 			String subject = "Manning Report";
 			String body = "Manning Report";
 			String attachment = path + fileName;

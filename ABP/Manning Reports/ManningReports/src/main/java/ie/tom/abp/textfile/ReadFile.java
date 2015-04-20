@@ -34,4 +34,28 @@ public class ReadFile {
 		}
 		return s;
 	}
+	public static String readEmail(String path, String emails) {
+		FileInputStream fis;
+		
+		String s = null;
+		try {
+			fis = new FileInputStream(path + emails);
+			
+			//Construct BufferedReader from InputStreamReader
+			BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				//get int from line	
+				s = line;
+			}
+
+			br.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return s;
+	}
 }
