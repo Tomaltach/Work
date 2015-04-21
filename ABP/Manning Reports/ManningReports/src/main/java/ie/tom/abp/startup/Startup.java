@@ -15,12 +15,18 @@ public class Startup {
 	private final static String PATH = "C:\\ITManningSheets\\";
 	private String share;
 	private String ip;
+	private String jobarea = "JobAreas.txt";
 	private String jobtype = "JobTypes.txt";
+	private String jobfq = "JobFQ.txt";
+	private String jobhq = "JobHQ.txt";
+	private String jobpad = "JobPAD.txt";
+	private String jobpacking = "JobPacking.txt";
+	private String jobabbatoir = "JobAbbatoir.txt";
 	private String emails = "Emails.txt";
 
 	public Startup() {
 		checkShare();
-		new GUI(ip, jobtype, emails, PATH, this);
+		new GUI(ip, jobarea, jobtype, emails, PATH, this);
 	}
 	public void reloadCache() {
 		if(!ip.equals(null)) {

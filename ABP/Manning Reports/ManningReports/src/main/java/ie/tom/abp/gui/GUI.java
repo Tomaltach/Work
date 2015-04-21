@@ -1,5 +1,6 @@
 package ie.tom.abp.gui;
 
+import ie.tom.abp.calendar.Calendar;
 import ie.tom.abp.entity.Employee;
 import ie.tom.abp.excel.WriteExcel;
 import ie.tom.abp.startup.Startup;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,25 +31,31 @@ import net.java.dev.designgridlayout.DesignGridLayout;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
-	private static final String HEADER = "Clock | Job Type\n------+------------\n";
+	private static final String HEADER = "Clock |Job Area |Job Type\n------+---------+------------\n";
+	private Calendar calendar = new Calendar();
 	private Startup startup;
 	private String clock = "";
+	private List<String> area = new ArrayList<String>();
 	private List<String> position = new ArrayList<String>();
 	private List<Employee> emp = new ArrayList<Employee>();
 	private static final float LARGE_TEXT = 48;
 	private static final float MEDIUM_TEXT = 36;
 	private static final int SMALL_TEXT = 24;
 	private String ip;
+	private String jobareas;
 	private String jobtypes;
 	private String emails;
 	private String path;
+	JComboBox<?> jobarea;
+	JComboBox<?> jobtype;
 	
-	public GUI(String ip, String jobtypes, String emails, String path, Startup startup) {
+	public GUI(String ip, String jobareas, String jobtypes, String emails, String path, Startup startup) {
 		super("Manning Report");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		
 		this.ip = ip;
+		this.jobareas = jobareas;
 		this.jobtypes = jobtypes;
 		this.emails = emails;
 		this.path = path;
@@ -63,9 +71,6 @@ public class GUI extends JFrame {
 		setVisible(true);
 	}
 	private void init() {
-		final JComboBox<?> jobtype = new JComboBox<Object>(position.toArray());
-		jobtype.setPreferredSize(new Dimension(10,60));
-		jobtype.setFont(jobtype.getFont().deriveFont(LARGE_TEXT));
 		final JTextArea textarea = new JTextArea(5, 5);
 		Font myFont = new Font("Courier", Font.BOLD, SMALL_TEXT);
 		textarea.setFont(myFont);
@@ -73,43 +78,65 @@ public class GUI extends JFrame {
 		textarea.setText(HEADER);
 		JScrollPane pane = new JScrollPane(textarea);
 		
-		JPanel keypad = keypad(jobtype, textarea);
-		JPanel options = options(jobtype, textarea);
-		
+		JPanel jobs = jobtypes();
+		JPanel keypad = keypad(textarea);
+		JPanel options = options(textarea);
+				
 		JPanel body = new JPanel();
-		DesignGridLayout layout = new DesignGridLayout(body);
-		layout.row().grid().add(keypad);
-		layout.row().grid().add(jobtype);
-		layout.row().grid().add(pane);
-		layout.row().grid().add(options);
+		body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
+		body.add(keypad);
+		body.add(jobs);
+		body.add(pane);
+		body.add(options);
 		
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(body, BorderLayout.CENTER);
 		
 		add(panel);		
 	}
-	private JPanel options(final JComboBox<?> jobtype, final JTextArea textarea) {
+	private JPanel jobtypes() {
+		jobarea = new JComboBox<Object>(area.toArray());
+		jobarea.setPreferredSize(new Dimension(360,60));
+		jobarea.setFont(jobarea.getFont().deriveFont(LARGE_TEXT));
+				
+		jobtype = new JComboBox<Object>(position.toArray());
+		jobtype.setPreferredSize(new Dimension(10,60));
+		jobtype.setFont(jobtype.getFont().deriveFont(LARGE_TEXT));
+		
+		JPanel jobs = new JPanel(new BorderLayout());
+		jobs.add(jobarea, BorderLayout.WEST);
+		jobs.add(jobtype, BorderLayout.CENTER);
+				
+		return jobs;	
+	}
+	private JPanel options(final JTextArea textarea) {
 		JButton reload = new JButton("Reload");
 		reload.setPreferredSize(new Dimension(40, 100));
-		reload.setFont(jobtype.getFont().deriveFont(MEDIUM_TEXT));
+		reload.setFont(reload.getFont().deriveFont(MEDIUM_TEXT));
 		reload.addActionListener(new ActionListener() {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public void actionPerformed(ActionEvent e) {
 				reload();
+                jobarea.removeAllItems();
+                jobarea.setModel(new DefaultComboBoxModel(area.toArray()));
                 jobtype.removeAllItems();
                 jobtype.setModel(new DefaultComboBoxModel(position.toArray()));
             }
 		});
 		JButton export = new JButton("Export");
 		export.setPreferredSize(new Dimension(40, 100));
-		export.setFont(jobtype.getFont().deriveFont(MEDIUM_TEXT));
+		export.setFont(export.getFont().deriveFont(MEDIUM_TEXT));
 		export.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Thread t1 = new Thread(new Runnable() {
 				     public void run() {
-						new WriteExcel(emp, ip, ReadFile.readEmail(path, emails));				
-						textarea.setText(HEADER);
-						emp.clear();
+				    	 if(!calendar.getDate().equals(" ")) {
+					    	 new WriteExcel(emp, ip, ReadFile.readEmail(path, emails), calendar.getDate());				
+					    	 textarea.setText(HEADER);
+					    	 emp.clear();
+				    	 } else {
+				    		 textarea.setText("\n\n\tMust enter Date!!\n\n");
+				    	 }
 				     }
 				});  
 				t1.start();
@@ -122,7 +149,7 @@ public class GUI extends JFrame {
 		
 		return options;
 	}
- 	private JPanel keypad(final JComboBox<?> jobtype, final JTextArea textarea) {
+ 	private JPanel keypad(final JTextArea textarea) {
 		final JTextField clockNumber = new JTextField(20);
 		clockNumber.setFont(clockNumber.getFont().deriveFont(MEDIUM_TEXT));
 		clockNumber.setEditable(false);
@@ -244,26 +271,13 @@ public class GUI extends JFrame {
 		save.setFont(save.getFont().deriveFont(MEDIUM_TEXT));
 		save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(clock.length() == 4 && !jobtype.getSelectedItem().equals("Job Type")
-                		&& !jobtype.getSelectedItem().equals("--- FQ ---")
-                		&& !jobtype.getSelectedItem().equals("--- HQ ---")
-                		&& !jobtype.getSelectedItem().equals("--- PAD ---")
-                		&& !jobtype.getSelectedItem().equals("--- Packing ---")
-                		&& !jobtype.getSelectedItem().equals("--- Abbatoir")
-                		&& !jobtype.getSelectedItem().equals("")) {
-                	System.out.println(clock + "| " + jobtype.getSelectedItem());
-                	textarea.setText(output(clock, ""+jobtype.getSelectedItem()));
-                	                    
-                	clock = "";
-                    clockNumber.setText(clock);
-                    repaint();
-                }
+                validate(textarea, clockNumber);
             }
         });
 		
 		JPanel keypad = new JPanel();
 		DesignGridLayout layout = new DesignGridLayout(keypad);
-		layout.row().grid().add(clockNumber);
+		layout.row().grid().add(clockNumber).grid().add(calendar.getTextField()).add(calendar.getCalendarButton());
 		layout.row().grid().add(one).add(two).add(three);
 		layout.row().grid().add(four).add(five).add(six);
 		layout.row().grid().add(seven).add(eight).add(nine);
@@ -271,18 +285,36 @@ public class GUI extends JFrame {
 		
 		return keypad;
 	}
-	private String output(String clock, String jobtype) {
-		emp.add(new Employee(clock, jobtype));
+	private String output(String clock, String jobtype, String jobarea) {
+		emp.add(new Employee(clock, jobtype, jobarea));
 		String out = "";
 		ListIterator<Employee> li = emp.listIterator(emp.size());		
 		while(li.hasPrevious()) {			
 			Employee e = li.previous();
-			out = out + e.getClock() + "  | " + e.getJobtype() + "\n";
+			out = out + e.getClock() + "  |" + e.getJobarea() + "\t|" + e.getJobtype() + "\n";
 		}
 		return HEADER + out;
 	}
- 	private void reload() {
+ 	private void validate(JTextArea textarea, JTextField clockNumber) {
+ 		if(clock.length() == 4 && !jobarea.getSelectedItem().equals("--- Job Area ---")
+ 				&& !jobtype.getSelectedItem().equals("--- Job Type ---")
+        		&& !jobtype.getSelectedItem().equals("--- FQ ---")
+        		&& !jobtype.getSelectedItem().equals("--- HQ ---")
+        		&& !jobtype.getSelectedItem().equals("--- PAD ---")
+        		&& !jobtype.getSelectedItem().equals("--- Packing ---")
+        		&& !jobtype.getSelectedItem().equals("--- Abbatoir")
+        		&& !jobtype.getSelectedItem().equals("")) {
+        	System.out.println(clock + " | " + jobarea.getSelectedItem() + "\t| " + jobtype.getSelectedItem());
+        	textarea.setText(output(clock, ""+jobtype.getSelectedItem(), ""+jobarea.getSelectedItem()));
+        	                    
+        	clock = "";
+            clockNumber.setText(clock);
+            repaint();
+        }
+ 	}
+	private void reload() {
  		startup.reloadCache();
+ 		area = ReadFile.readJobType(path, jobareas);
 		position = ReadFile.readJobType(path, jobtypes);
 	}
 }
