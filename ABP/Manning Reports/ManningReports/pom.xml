@@ -39,6 +39,12 @@
 			<artifactId>jcalendarbutton</artifactId>
 			<version>1.4.4</version>
 		</dependency>
+		<!-- JodaTime -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.6</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

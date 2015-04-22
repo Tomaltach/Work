@@ -1,5 +1,6 @@
 package ie.tom.abp.startup;
 
+import ie.tom.abp.entity.Jobs;
 import ie.tom.abp.gui.GUI;
 
 import java.io.BufferedReader;
@@ -16,17 +17,18 @@ public class Startup {
 	private String share;
 	private String ip;
 	private String jobarea = "JobAreas.txt";
-	private String jobtype = "JobTypes.txt";
-	private String jobfq = "JobFQ.txt";
-	private String jobhq = "JobHQ.txt";
-	private String jobpad = "JobPAD.txt";
-	private String jobpacking = "JobPacking.txt";
-	private String jobabbatoir = "JobAbbatoir.txt";
+	private String jobfq = "JobsFQ.txt";
+	private String jobhq = "JobsHQ.txt";
+	private String jobpad = "JobsPAD.txt";
+	private String jobpacking = "JobsPacking.txt";
+	private String jobabbatoir = "JobsAbbatoir.txt";
 	private String emails = "Emails.txt";
+	private Jobs jobs;
 
 	public Startup() {
 		checkShare();
-		new GUI(ip, jobarea, jobtype, emails, PATH, this);
+		createJobs();
+		new GUI(ip, jobs, emails, PATH, this);
 	}
 	public void reloadCache() {
 		if(!ip.equals(null)) {
@@ -36,6 +38,15 @@ public class Startup {
 		} else {
 			ip = "10.6.1.70";
 		}
+	}
+	private void createJobs() {
+		jobs = new Jobs();
+		jobs.setJobareas(jobarea);
+		jobs.setJobsFQ(jobfq);
+		jobs.setJobsHQ(jobhq);
+		jobs.setJobsPAD(jobpad);
+		jobs.setJobsPacking(jobpacking);
+		jobs.setJobsAbbatoir(jobabbatoir);		
 	}
 	private void checkShare() {
 		try {

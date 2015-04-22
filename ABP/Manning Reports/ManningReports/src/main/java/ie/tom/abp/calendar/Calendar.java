@@ -1,6 +1,7 @@
 package ie.tom.abp.calendar;
 
 import java.awt.Dimension;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
 import java.util.Date;
@@ -20,7 +21,7 @@ public class Calendar {
 		btnCalendar = new JCalendarButton();
 		btnCalendar.setPreferredSize(new Dimension(20,50));
         btnCalendar.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+            public void propertyChange(PropertyChangeEvent evt) {
                 dateOnlyPopupChanged(evt);
             }
         });
@@ -37,12 +38,11 @@ public class Calendar {
 	public String getDate() {
 		return dateString;
 	}
-	private void dateOnlyPopupChanged(java.beans.PropertyChangeEvent evt) {
-
-        if (evt.getNewValue() instanceof Date)
+	private void dateOnlyPopupChanged(PropertyChangeEvent evt) {
+        if(evt.getNewValue() instanceof Date)
             setDate((Date)evt.getNewValue());
     }
-    public void setDate(Date date){
+    private void setDate(Date date){
         dateString = "";
         if(date != null) {
             dateString = dateFormat.format(date);

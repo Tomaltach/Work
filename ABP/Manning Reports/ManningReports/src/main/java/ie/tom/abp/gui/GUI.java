@@ -1,7 +1,8 @@
 package ie.tom.abp.gui;
 
-import ie.tom.abp.calendar.Calendar;
+import ie.tom.abp.calendar.ComboCalendar;
 import ie.tom.abp.entity.Employee;
+import ie.tom.abp.entity.Jobs;
 import ie.tom.abp.excel.WriteExcel;
 import ie.tom.abp.startup.Startup;
 import ie.tom.abp.textfile.ReadFile;
@@ -17,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -32,7 +32,8 @@ import net.java.dev.designgridlayout.DesignGridLayout;
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
 	private static final String HEADER = "Clock |Job Area |Job Type\n------+---------+------------\n";
-	private Calendar calendar = new Calendar();
+	//private Calendar calendar = new Calendar();
+	private ComboCalendar calendar = new ComboCalendar();
 	private Startup startup;
 	private String clock = "";
 	private List<String> area = new ArrayList<String>();
@@ -42,24 +43,22 @@ public class GUI extends JFrame {
 	private static final float MEDIUM_TEXT = 36;
 	private static final int SMALL_TEXT = 24;
 	private String ip;
-	private String jobareas;
-	private String jobtypes;
+	private Jobs jobs;
 	private String emails;
 	private String path;
 	JComboBox<?> jobarea;
 	JComboBox<?> jobtype;
-	
-	public GUI(String ip, String jobareas, String jobtypes, String emails, String path, Startup startup) {
+
+	public GUI(String ip, Jobs jobs, String emails, String path, Startup startup) {
 		super("Manning Report");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		
 		this.ip = ip;
-		this.jobareas = jobareas;
-		this.jobtypes = jobtypes;
 		this.emails = emails;
 		this.path = path;
 		this.startup = startup;
+		this.jobs = jobs;
 		
 		Toolkit toolkit =  Toolkit.getDefaultToolkit ();
 		Dimension dim = toolkit.getScreenSize();
@@ -82,12 +81,12 @@ public class GUI extends JFrame {
 		JPanel keypad = keypad(textarea);
 		JPanel options = options(textarea);
 				
-		JPanel body = new JPanel();
-		body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
-		body.add(keypad);
-		body.add(jobs);
-		body.add(pane);
-		body.add(options);
+		JPanel body = new JPanel();		
+		DesignGridLayout layout = new DesignGridLayout(body);
+		layout.row().grid().add(keypad);
+		layout.row().grid().add(jobs);
+		layout.row().grid().add(pane);
+		layout.row().grid().add(options);
 		
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(body, BorderLayout.CENTER);
@@ -97,17 +96,52 @@ public class GUI extends JFrame {
 	private JPanel jobtypes() {
 		jobarea = new JComboBox<Object>(area.toArray());
 		jobarea.setPreferredSize(new Dimension(360,60));
-		jobarea.setFont(jobarea.getFont().deriveFont(LARGE_TEXT));
+		jobarea.setFont(jobarea.getFont().deriveFont(LARGE_TEXT));		
 				
 		jobtype = new JComboBox<Object>(position.toArray());
 		jobtype.setPreferredSize(new Dimension(10,60));
 		jobtype.setFont(jobtype.getFont().deriveFont(LARGE_TEXT));
 		
+		jobarea.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String choice = jobarea.getSelectedItem().toString();
+				System.out.println(choice);
+				switch(choice) {
+					case "FQ":
+						position = ReadFile.readJobType(path, jobs.getJobsFQ());
+						refresh();
+						break;
+					case "HQ":
+						position = ReadFile.readJobType(path, jobs.getJobsHQ());
+						refresh();
+						break;
+					case "PAD":
+						position = ReadFile.readJobType(path, jobs.getJobsPAD());
+						refresh();
+						break;
+					case "PACKING":
+						position = ReadFile.readJobType(path, jobs.getJobsPacking());
+						refresh();
+						break;
+					case "ABBATOIR":
+						position = ReadFile.readJobType(path, jobs.getJobsAbbatoir());
+						refresh();
+						break;
+					default:
+						List<String> s = new ArrayList<String>();
+						s.add("--- Job Type ---");
+						position = s;
+						System.out.println("Not an approved job!");
+						break;
+				}
+			}
+		});
+		
 		JPanel jobs = new JPanel(new BorderLayout());
 		jobs.add(jobarea, BorderLayout.WEST);
 		jobs.add(jobtype, BorderLayout.CENTER);
 				
-		return jobs;	
+		return jobs;
 	}
 	private JPanel options(final JTextArea textarea) {
 		JButton reload = new JButton("Reload");
@@ -117,10 +151,12 @@ public class GUI extends JFrame {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public void actionPerformed(ActionEvent e) {
 				reload();
-                jobarea.removeAllItems();
-                jobarea.setModel(new DefaultComboBoxModel(area.toArray()));
-                jobtype.removeAllItems();
-                jobtype.setModel(new DefaultComboBoxModel(position.toArray()));
+		        jobarea.setModel(new DefaultComboBoxModel(area.toArray()));
+
+		        List<String> p = new ArrayList<String>();
+				p.add("--- Job Type ---");
+				position = p;
+		        jobtype.setModel(new DefaultComboBoxModel(position.toArray()));
             }
 		});
 		JButton export = new JButton("Export");
@@ -277,7 +313,7 @@ public class GUI extends JFrame {
 		
 		JPanel keypad = new JPanel();
 		DesignGridLayout layout = new DesignGridLayout(keypad);
-		layout.row().grid().add(clockNumber).grid().add(calendar.getTextField()).add(calendar.getCalendarButton());
+		layout.row().grid().add(clockNumber).grid().add(calendar.getDay()).add(calendar.getMonth()).add(calendar.getYear());
 		layout.row().grid().add(one).add(two).add(three);
 		layout.row().grid().add(four).add(five).add(six);
 		layout.row().grid().add(seven).add(eight).add(nine);
@@ -314,7 +350,14 @@ public class GUI extends JFrame {
  	}
 	private void reload() {
  		startup.reloadCache();
- 		area = ReadFile.readJobType(path, jobareas);
-		position = ReadFile.readJobType(path, jobtypes);
+ 		area = ReadFile.readJobType(path, jobs.getJobareas());
+ 		
+ 		List<String> s = new ArrayList<String>();
+		s.add("--- Job Type ---");
+		position = s;
+	}
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void refresh() {
+        jobtype.setModel(new DefaultComboBoxModel(position.toArray()));
 	}
 }
