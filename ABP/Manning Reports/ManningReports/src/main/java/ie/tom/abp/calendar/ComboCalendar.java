@@ -64,14 +64,14 @@ public class ComboCalendar {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void dayCombo() {
 		day = new JComboBox<Object>();
-		day.setPreferredSize(new Dimension(20,50));
+		day.setPreferredSize(new Dimension(10,50));
 		day.setFont(day.getFont().deriveFont(MEDIUM_TEXT));
 		day.setModel(new DefaultComboBoxModel(DAYS));
 	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void monthCombo() {
 		month = new JComboBox<Object>();
-		month.setPreferredSize(new Dimension(20,50));
+		month.setPreferredSize(new Dimension(10,50));
 		month.setFont(month.getFont().deriveFont(MEDIUM_TEXT));
 		month.setModel(new DefaultComboBoxModel(MONTHS));
 		month.addActionListener(new ActionListener() {
@@ -83,7 +83,7 @@ public class ComboCalendar {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void yearCombo() {
 		year = new JComboBox<Object>();
-		year.setPreferredSize(new Dimension(20,50));
+		year.setPreferredSize(new Dimension(10,50));
 		year.setFont(year.getFont().deriveFont(MEDIUM_TEXT));
 		year.setModel(new DefaultComboBoxModel(years));
 		year.addActionListener(new ActionListener() {

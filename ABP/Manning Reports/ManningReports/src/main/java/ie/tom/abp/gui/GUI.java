@@ -62,7 +62,10 @@ public class GUI extends JFrame {
 		
 		Toolkit toolkit =  Toolkit.getDefaultToolkit ();
 		Dimension dim = toolkit.getScreenSize();
-		setSize(dim.width, dim.height);
+		setSize(dim.width, dim.height);		
+		
+		// make maximized
+		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		
 		reload();
 		init();
@@ -193,105 +196,26 @@ public class GUI extends JFrame {
 		clockNumber.setText(clock);
 		
 		final JButton one = new JButton("1");
-		one.setPreferredSize(new Dimension(40, 100));
-		one.setFont(one.getFont().deriveFont(MEDIUM_TEXT));
-		one.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                clock += one.getText();
-                clockNumber.setText(clock);
-                repaint();
-            }
-        }); 
+		buttonProperties(one, clockNumber);
 		final JButton two = new JButton("2");
-		two.setPreferredSize(new Dimension(40, 100));
-		two.setFont(two.getFont().deriveFont(MEDIUM_TEXT));
-		two.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                clock += two.getText();
-                clockNumber.setText(clock);
-                repaint();
-            }
-        }); 
+		buttonProperties(two, clockNumber);
 		final JButton three = new JButton("3");
-		three.setPreferredSize(new Dimension(40, 100));
-		three.setFont(three.getFont().deriveFont(MEDIUM_TEXT));
-		three.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                clock += three.getText();
-                clockNumber.setText(clock);
-                repaint();
-            }
-        }); 
+		buttonProperties(three, clockNumber);
 		final JButton four = new JButton("4");
-		four.setPreferredSize(new Dimension(40, 100));
-		four.setFont(four.getFont().deriveFont(MEDIUM_TEXT));
-		four.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                clock += four.getText();
-                clockNumber.setText(clock);
-                repaint();
-            }
-        }); 
+		buttonProperties(four, clockNumber);
 		final JButton five = new JButton("5");
-		five.setPreferredSize(new Dimension(40, 100));
-		five.setFont(five.getFont().deriveFont(MEDIUM_TEXT));
-		five.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                clock += five.getText();
-                clockNumber.setText(clock);
-                repaint();
-            }
-        }); 
+		buttonProperties(five, clockNumber);
 		final JButton six = new JButton("6");
-		six.setPreferredSize(new Dimension(40, 100));
-		six.setFont(six.getFont().deriveFont(MEDIUM_TEXT));
-		six.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                clock += six.getText();
-                clockNumber.setText(clock);
-                repaint();
-            }
-        }); 
+		buttonProperties(six, clockNumber);
 		final JButton seven = new JButton("7");
-		seven.setPreferredSize(new Dimension(40, 100));
-		seven.setFont(seven.getFont().deriveFont(MEDIUM_TEXT));
-		seven.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                clock += seven.getText();
-                clockNumber.setText(clock);
-                repaint();
-            }
-        }); 
+		buttonProperties(seven, clockNumber);
 		final JButton eight = new JButton("8");
-		eight.setPreferredSize(new Dimension(40, 100));
-		eight.setFont(eight.getFont().deriveFont(MEDIUM_TEXT));
-		eight.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                clock += eight.getText();
-                clockNumber.setText(clock);
-                repaint();
-            }
-        }); 
+		buttonProperties(eight, clockNumber);
 		final JButton nine = new JButton("9");
-		nine.setPreferredSize(new Dimension(40, 100));
-		nine.setFont(nine.getFont().deriveFont(MEDIUM_TEXT));
-		nine.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                clock += nine.getText();
-                clockNumber.setText(clock);
-                repaint();
-            }
-        }); 
+		buttonProperties(nine, clockNumber);		
 		final JButton zero = new JButton("0");
-		zero.setPreferredSize(new Dimension(40, 100));
-		zero.setFont(zero.getFont().deriveFont(MEDIUM_TEXT));
-		zero.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                clock += zero.getText();
-                clockNumber.setText(clock);
-                repaint();
-            }
-        });  
+		buttonProperties(zero, clockNumber);
+		
 		final JButton clear = new JButton("Clear");
 		clear.setPreferredSize(new Dimension(40, 100));
 		clear.setFont(clear.getFont().deriveFont(MEDIUM_TEXT));
@@ -313,7 +237,7 @@ public class GUI extends JFrame {
 		
 		JPanel keypad = new JPanel();
 		DesignGridLayout layout = new DesignGridLayout(keypad);
-		layout.row().grid().add(clockNumber).grid().add(calendar.getDay()).add(calendar.getMonth()).add(calendar.getYear());
+		layout.row().grid().add(clockNumber).grid().add(calendar.getDay()).grid().add(calendar.getMonth()).grid().add(calendar.getYear());
 		layout.row().grid().add(one).add(two).add(three);
 		layout.row().grid().add(four).add(five).add(six);
 		layout.row().grid().add(seven).add(eight).add(nine);
@@ -321,6 +245,17 @@ public class GUI extends JFrame {
 		
 		return keypad;
 	}
+ 	private void buttonProperties(final JButton button, final JTextField clockNumber) {
+ 		button.setPreferredSize(new Dimension(40, 100));
+ 		button.setFont(button.getFont().deriveFont(MEDIUM_TEXT));
+ 		button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	clock += button.getText();
+                clockNumber.setText(clock);
+                repaint();
+            }
+        });
+ 	}
 	private String output(String clock, String jobtype, String jobarea) {
 		emp.add(new Employee(clock, jobtype, jobarea));
 		String out = "";
