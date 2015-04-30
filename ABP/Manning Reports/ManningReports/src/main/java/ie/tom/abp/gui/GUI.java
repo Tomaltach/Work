@@ -22,6 +22,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -38,6 +39,7 @@ public class GUI extends JFrame {
 	private String clock = "";
 	private List<String> area = new ArrayList<String>();
 	private List<String> position = new ArrayList<String>();
+	private List<String> supervisor = new ArrayList<String>();
 	private List<Employee> emp = new ArrayList<Employee>();
 	private static final float LARGE_TEXT = 48;
 	private static final float MEDIUM_TEXT = 36;
@@ -45,17 +47,20 @@ public class GUI extends JFrame {
 	private String ip;
 	private Jobs jobs;
 	private String emails;
+	private String supervisors;
 	private String path;
 	JComboBox<?> jobarea;
 	JComboBox<?> jobtype;
+	JComboBox<?> supers;
 
-	public GUI(String ip, Jobs jobs, String emails, String path, Startup startup) {
+	public GUI(String ip, Jobs jobs, String emails, String supervisors, String path, Startup startup) {
 		super("Manning Report");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		
 		this.ip = ip;
 		this.emails = emails;
+		this.supervisors = supervisors;
 		this.path = path;
 		this.startup = startup;
 		this.jobs = jobs;
@@ -177,7 +182,22 @@ public class GUI extends JFrame {
 				Thread t1 = new Thread(new Runnable() {
 				     public void run() {
 				    	 if(!calendar.getDate().equals(" ")) {
-					    	 new WriteExcel(emp, ip, ReadFile.readEmail(path, emails), calendar.getDate());				
+				    		 supers = new JComboBox<Object>(supervisor.toArray());
+				    		 supers.setPreferredSize(new Dimension(360,60));
+				    		 supers.setFont(jobarea.getFont().deriveFont(LARGE_TEXT));
+				    		 String commit = null;
+				    		 boolean check = true;
+				    		 while(check == true) {
+					    		 JOptionPane.showMessageDialog(null, supers, "Select Supervisor", JOptionPane.QUESTION_MESSAGE);
+					    		 commit = supers.getSelectedItem().toString();
+					    		 if(commit.equals("--- Supervisor ---")) {
+					    			 check = true;
+					    		 } else {
+					    			 check = false;
+					    		 }
+				    		 }
+				    		 
+					    	 new WriteExcel(emp, ip, ReadFile.readEmail(path, emails), calendar.getDate(), commit);				
 					    	 textarea.setText(HEADER);
 					    	 emp.clear();
 				    	 } else {
@@ -307,6 +327,8 @@ public class GUI extends JFrame {
  		List<String> s = new ArrayList<String>();
 		s.add("--- Job Type ---");
 		position = s;
+		
+		supervisor = ReadFile.readJobType(path, supervisors);
 	}
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void refresh() {

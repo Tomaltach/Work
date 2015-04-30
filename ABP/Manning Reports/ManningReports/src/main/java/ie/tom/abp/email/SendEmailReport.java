@@ -21,12 +21,14 @@ public class SendEmailReport {
 	private String fileName;
 	private String ip;
 	private String emails;
+	private String commit;
 
-	public SendEmailReport(String path, String fileName, String ip, String emails) {
+	public SendEmailReport(String path, String fileName, String ip, String emails, String commit) {
 		this.path = path;
 		this.fileName = fileName;
 		this.ip = ip;
 		this.emails = emails;
+		this.commit = commit;
 		sendEmail();
 	}
 	private void sendEmail() {
@@ -36,8 +38,8 @@ public class SendEmailReport {
 			//String to = emails;
 			String to = "BanBHSupervisor.Reports@abpireland.com,Barry.Owens@abpireland.com,Thomas.Donegan@abpireland.com,Charles.Jute@abpireland.com";
 			String from = "BanBHSupervisor.Reports@abpireland.com";
-			String subject = "Manning Report";
-			String body = "Manning Report";
+			String subject = "Manning Report - " + commit;
+			String body = "Manning Report submitted by " + commit;
 			String attachment = path + fileName;
 			send(smtpServer, to, from, subject, body, attachment);
 		} catch(Exception ex) {

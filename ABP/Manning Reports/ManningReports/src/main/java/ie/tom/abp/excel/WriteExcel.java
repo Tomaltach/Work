@@ -18,13 +18,15 @@ public class WriteExcel {
 	private String ip;
 	private String emails;
 	private String date;
+	private String commit;
 	private final static String PATH = "C:\\ITManningSheets\\ManningSheets\\";
 
-	public WriteExcel(List<Employee> emp, String ip, String emails, String date) {
+	public WriteExcel(List<Employee> emp, String ip, String emails, String date, String commit) {
 		this.emp = emp;
 		this.ip = ip;
 		this.emails = emails;
 		this.date = date;
+		this.commit = commit;
 		init();
 	}
 	private void init() {
@@ -66,7 +68,7 @@ public class WriteExcel {
 			workbook.write(out);
 			out.close();
 			System.out.println(PATH + fileName + " written successfully on disk.");
-			new SendEmailReport(PATH, fileName, ip, emails);
+			new SendEmailReport(PATH, fileName, ip, emails, commit);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

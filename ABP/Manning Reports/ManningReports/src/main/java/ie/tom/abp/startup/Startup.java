@@ -23,12 +23,13 @@ public class Startup {
 	private String jobpacking = "JobsPacking.txt";
 	private String jobabbatoir = "JobsAbbatoir.txt";
 	private String emails = "Emails.txt";
+	private String supervisors = "Supervisors.txt";
 	private Jobs jobs;
 
 	public Startup() {
 		checkShare();
 		createJobs();
-		new GUI(ip, jobs, emails, PATH, this);
+		new GUI(ip, jobs, emails, supervisors, PATH, this);
 	}
 	public void reloadCache() {
 		if(!ip.equals(null)) {
