@@ -108,7 +108,6 @@ public class GUI extends JFrame {
 		jobarea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String choice = jobarea.getSelectedItem().toString();
-				System.out.println(choice);
 				switch(choice) {
 					case "FQ":
 						position = ReadFile.readJobType(path, jobs.getJobsFQ());
@@ -162,6 +161,14 @@ public class GUI extends JFrame {
 		        jobtype.setModel(new DefaultComboBoxModel(position.toArray()));
             }
 		});
+		JButton remove = new JButton("Remove");
+		remove.setPreferredSize(new Dimension(40, 100));
+		remove.setFont(remove.getFont().deriveFont(MEDIUM_TEXT));
+		remove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textarea.setText(remove());
+            }
+		});
 		JButton export = new JButton("Export");
 		export.setPreferredSize(new Dimension(40, 100));
 		export.setFont(export.getFont().deriveFont(MEDIUM_TEXT));
@@ -184,7 +191,7 @@ public class GUI extends JFrame {
 		
 		JPanel options = new JPanel();
 		DesignGridLayout layout = new DesignGridLayout(options);
-		layout.row().grid().add(reload).add(export);
+		layout.row().grid().add(reload).add(remove).add(export);
 		
 		return options;
 	}
@@ -256,7 +263,17 @@ public class GUI extends JFrame {
             }
         });
  	}
-	private String output(String clock, String jobtype, String jobarea) {
+	private String remove() {
+		emp.remove(emp.size()-1);
+		String out = "";
+		ListIterator<Employee> li = emp.listIterator(emp.size());		
+		while(li.hasPrevious()) {			
+			Employee e = li.previous();
+			out = out + e.getClock() + "  |" + e.getJobarea() + "\t|" + e.getJobtype() + "\n";
+		}
+		return HEADER + out;
+	}
+ 	private String output(String clock, String jobtype, String jobarea) {
 		emp.add(new Employee(clock, jobtype, jobarea));
 		String out = "";
 		ListIterator<Employee> li = emp.listIterator(emp.size());		
